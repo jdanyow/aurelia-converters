@@ -88,8 +88,99 @@ define(["exports", "moment", "numeral"], function (exports, _moment, _numeral) {
 
     return AgeValueConverter;
   })();
+  var SortValueConverter = exports.SortValueConverter = (function () {
+    function SortValueConverter() {
+      _classCallCheck(this, SortValueConverter);
+    }
+
+    _prototypeProperties(SortValueConverter, null, {
+      toView: {
+        value: function toView(array, propertyName) {
+          var comparison = arguments[2] === undefined ? "ordinalIgnoreCase" : arguments[2];
+          var direction = arguments[3] === undefined ? "ascending" : arguments[3];
+          var directionFactor = direction === "ascending" ? 1 : -1,
+              comparer = this[comparison + "Comparison"];
+          if (propertyName === undefined) {
+            return array.sort(function (a, b) {
+              return comparer(a, b) * directionFactor;
+            });
+          }return array.sort(function (a, b) {
+            return comparer(a[propertyName], b[propertyName]) * directionFactor;
+          });
+        },
+        writable: true,
+        configurable: true
+      },
+      ordinalIgnoreCaseComparison: {
+        value: function ordinalIgnoreCaseComparison(a, b) {
+          if ((a === null || a === undefined) && (b === null || b === undefined)) {
+            return 0;
+          }if (a === null || a === undefined) {
+            return -1;
+          }if (b === null || b === undefined) {
+            return 1;
+          }a = a.toString().toLowerCase();
+          b = b.toString().toLowerCase();
+          if (a < b) {
+            return -1;
+          }if (a > b) {
+            return 1;
+          }return 0;
+        },
+        writable: true,
+        configurable: true
+      },
+      ordinalComparison: {
+        value: function ordinalComparison(a, b) {
+          if ((a === null || a === undefined) && (b === null || b === undefined)) {
+            return 0;
+          }if (a === null || a === undefined) {
+            return -1;
+          }if (b === null || b === undefined) {
+            return 1;
+          }a = a.toString();
+          b = b.toString();
+          if (a < b) {
+            return -1;
+          }if (a > b) {
+            return 1;
+          }return 0;
+        },
+        writable: true,
+        configurable: true
+      },
+      dateComparison: {
+        value: function dateComparison(a, b) {
+          if ((a === null || a === undefined) && (b === null || b === undefined)) {
+            return 0;
+          }if (a === null || a === undefined) {
+            return -1;
+          }if (b === null || b === undefined) {
+            return 1;
+          }return moment(b).diff(moment(a));
+        },
+        writable: true,
+        configurable: true
+      },
+      numberComparison: {
+        value: function numberComparison(a, b) {
+          if ((a === null || a === undefined) && (b === null || b === undefined)) {
+            return 0;
+          }if (a === null || a === undefined) {
+            return -1;
+          }if (b === null || b === undefined) {
+            return 1;
+          }return a - b;
+        },
+        writable: true,
+        configurable: true
+      }
+    });
+
+    return SortValueConverter;
+  })();
   function install(aurelia) {
-    aurelia.withResources(RelativeValueConverter, DateValueConverter, NumberValueConverter, AgeValueConverter);
+    aurelia.withResources(RelativeValueConverter, DateValueConverter, NumberValueConverter, AgeValueConverter, SortValueConverter);
   }
   Object.defineProperty(exports, "__esModule", {
     value: true
