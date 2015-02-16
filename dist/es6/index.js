@@ -1,29 +1,38 @@
 import moment from 'moment';
 import numeral from 'numeral';
-import vagueTime from 'vague-time';
 
-export class VagueValueConverter {
+export class RelativeValueConverter {
   toView(value){
-    if (value === undefined || value === null || value === '')
-      return value;
-    if (typeof value === 'string')
-      value = Date.parse(value);
-    return vagueTime.get({ to: value });
+    if (!value)
+      return null;
+    return moment(value).fromNow();
   }
 }
 
 export class DateValueConverter {
   toView(value, format) {
+    if (!value)
+      return null;
     return moment(value).format(format);
   }
 }
 
 export class NumberValueConverter {
   toView(value, format) {
+    if (!value)
+      return null;
     return numeral(value).format(format);
   }
 }
 
+export class AgeValueConverter {
+  toView(dob) {
+    if (!dob)
+      return null;
+    return Math.floor(moment().diff(moment(dob), 'year', false));
+  }
+}
+
 export function install(aurelia) {
-  aurelia.withResources(VagueValueConverter, DateValueConverter, NumberValueConverter);
+  aurelia.withResources(RelativeValueConverter, DateValueConverter, NumberValueConverter, AgeValueConverter);
 }

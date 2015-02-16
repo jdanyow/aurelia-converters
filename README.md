@@ -6,7 +6,6 @@ This library is a plugin for [Aurelia](http://www.aurelia.io/) containing exampl
 
 * [moment](http://momentjs.com/)
 * [numeral](http://numeraljs.com/)
-* [vague-time](https://www.npmjs.com/package/vague-time)
 
 ## Platform Support
 

@@ -1,44 +1,41 @@
-System.register(["moment", "numeral", "vague-time"], function (_export) {
+System.register(["moment", "numeral"], function (_export) {
   "use strict";
 
-  var moment, numeral, vagueTime, _prototypeProperties, _classCallCheck, VagueValueConverter, DateValueConverter, NumberValueConverter;
+  var moment, numeral, _prototypeProperties, _classCallCheck, RelativeValueConverter, DateValueConverter, NumberValueConverter, AgeValueConverter;
   _export("install", install);
 
   function install(aurelia) {
-    aurelia.withResources(VagueValueConverter, DateValueConverter, NumberValueConverter);
+    aurelia.withResources(RelativeValueConverter, DateValueConverter, NumberValueConverter, AgeValueConverter);
   }
   return {
     setters: [function (_moment) {
       moment = _moment["default"];
     }, function (_numeral) {
       numeral = _numeral["default"];
-    }, function (_vagueTime) {
-      vagueTime = _vagueTime["default"];
     }],
     execute: function () {
       _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
 
       _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
 
-      VagueValueConverter = _export("VagueValueConverter", (function () {
-        function VagueValueConverter() {
-          _classCallCheck(this, VagueValueConverter);
+      RelativeValueConverter = _export("RelativeValueConverter", (function () {
+        function RelativeValueConverter() {
+          _classCallCheck(this, RelativeValueConverter);
         }
 
-        _prototypeProperties(VagueValueConverter, null, {
+        _prototypeProperties(RelativeValueConverter, null, {
           toView: {
             value: function toView(value) {
-              if (value === undefined || value === null || value === "") {
-                return value;
-              }if (typeof value === "string") value = Date.parse(value);
-              return vagueTime.get({ to: value });
+              if (!value) {
+                return null;
+              }return moment(value).fromNow();
             },
             writable: true,
             configurable: true
           }
         });
 
-        return VagueValueConverter;
+        return RelativeValueConverter;
       })());
       DateValueConverter = _export("DateValueConverter", (function () {
         function DateValueConverter() {
@@ -48,7 +45,9 @@ System.register(["moment", "numeral", "vague-time"], function (_export) {
         _prototypeProperties(DateValueConverter, null, {
           toView: {
             value: function toView(value, format) {
-              return moment(value).format(format);
+              if (!value) {
+                return null;
+              }return moment(value).format(format);
             },
             writable: true,
             configurable: true
@@ -65,7 +64,9 @@ System.register(["moment", "numeral", "vague-time"], function (_export) {
         _prototypeProperties(NumberValueConverter, null, {
           toView: {
             value: function toView(value, format) {
-              return numeral(value).format(format);
+              if (!value) {
+                return null;
+              }return numeral(value).format(format);
             },
             writable: true,
             configurable: true
@@ -73,6 +74,25 @@ System.register(["moment", "numeral", "vague-time"], function (_export) {
         });
 
         return NumberValueConverter;
+      })());
+      AgeValueConverter = _export("AgeValueConverter", (function () {
+        function AgeValueConverter() {
+          _classCallCheck(this, AgeValueConverter);
+        }
+
+        _prototypeProperties(AgeValueConverter, null, {
+          toView: {
+            value: function toView(dob) {
+              if (!dob) {
+                return null;
+              }return Math.floor(moment().diff(moment(dob), "year", false));
+            },
+            writable: true,
+            configurable: true
+          }
+        });
+
+        return AgeValueConverter;
       })());
     }
   };

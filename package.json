@@ -26,8 +26,7 @@
     },
     "dependencies": {
       "moment": "npm:moment@^2.9.0",
-      "numeral": "npm:numeral@^1.5.3",
-      "vague-time": "npm:vague-time@^1.2.0"
+      "numeral": "npm:numeral@^1.5.3"
     }
   },
   "devDependencies": {

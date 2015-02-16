@@ -1,4 +1,4 @@
-define(["exports", "moment", "numeral", "vague-time"], function (exports, _moment, _numeral, _vagueTime) {
+define(["exports", "moment", "numeral"], function (exports, _moment, _numeral) {
   "use strict";
 
   var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
@@ -12,27 +12,24 @@ define(["exports", "moment", "numeral", "vague-time"], function (exports, _momen
 
   var numeral = _interopRequire(_numeral);
 
-  var vagueTime = _interopRequire(_vagueTime);
-
-  var VagueValueConverter = exports.VagueValueConverter = (function () {
-    function VagueValueConverter() {
-      _classCallCheck(this, VagueValueConverter);
+  var RelativeValueConverter = exports.RelativeValueConverter = (function () {
+    function RelativeValueConverter() {
+      _classCallCheck(this, RelativeValueConverter);
     }
 
-    _prototypeProperties(VagueValueConverter, null, {
+    _prototypeProperties(RelativeValueConverter, null, {
       toView: {
         value: function toView(value) {
-          if (value === undefined || value === null || value === "") {
-            return value;
-          }if (typeof value === "string") value = Date.parse(value);
-          return vagueTime.get({ to: value });
+          if (!value) {
+            return null;
+          }return moment(value).fromNow();
         },
         writable: true,
         configurable: true
       }
     });
 
-    return VagueValueConverter;
+    return RelativeValueConverter;
   })();
   var DateValueConverter = exports.DateValueConverter = (function () {
     function DateValueConverter() {
@@ -42,7 +39,9 @@ define(["exports", "moment", "numeral", "vague-time"], function (exports, _momen
     _prototypeProperties(DateValueConverter, null, {
       toView: {
         value: function toView(value, format) {
-          return moment(value).format(format);
+          if (!value) {
+            return null;
+          }return moment(value).format(format);
         },
         writable: true,
         configurable: true
@@ -59,7 +58,9 @@ define(["exports", "moment", "numeral", "vague-time"], function (exports, _momen
     _prototypeProperties(NumberValueConverter, null, {
       toView: {
         value: function toView(value, format) {
-          return numeral(value).format(format);
+          if (!value) {
+            return null;
+          }return numeral(value).format(format);
         },
         writable: true,
         configurable: true
@@ -68,8 +69,27 @@ define(["exports", "moment", "numeral", "vague-time"], function (exports, _momen
 
     return NumberValueConverter;
   })();
+  var AgeValueConverter = exports.AgeValueConverter = (function () {
+    function AgeValueConverter() {
+      _classCallCheck(this, AgeValueConverter);
+    }
+
+    _prototypeProperties(AgeValueConverter, null, {
+      toView: {
+        value: function toView(dob) {
+          if (!dob) {
+            return null;
+          }return Math.floor(moment().diff(moment(dob), "year", false));
+        },
+        writable: true,
+        configurable: true
+      }
+    });
+
+    return AgeValueConverter;
+  })();
   function install(aurelia) {
-    aurelia.withResources(VagueValueConverter, DateValueConverter, NumberValueConverter);
+    aurelia.withResources(RelativeValueConverter, DateValueConverter, NumberValueConverter, AgeValueConverter);
   }
   Object.defineProperty(exports, "__esModule", {
     value: true

@@ -1,7 +1,7 @@
-import {VagueValueConverter, DateValueConverter, NumberValueConverter} from '../src/index';
+import {RelativeValueConverter, DateValueConverter, NumberValueConverter} from '../src/index';
 
-// describe('VagueValueConverter', () => {
+// describe('RelativeValueConverter', () => {
 //   it('can convert', () => {
-//     expect(new VagueValueConverter().toView(new Date())).toBe('');
+//     expect(new RelativeValueConverter().toView(new Date())).toBe('');
 //   });
 // });
